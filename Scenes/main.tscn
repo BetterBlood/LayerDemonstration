@@ -1,0 +1,71 @@
+[gd_scene load_steps=7 format=3 uid="uid://b20h7v4ysl20x"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_j0ds8"]
+[ext_resource type="Script" path="res://scripts/projectile.gd" id="2_0dmqu"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dsk5j"]
+radius = 50.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ctxe3"]
+radius = 60.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8n6h2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qejlk"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(317, 102)
+collision_layer = 2
+script = ExtResource("1_j0ds8")
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+
+[node name="Shape" type="CollisionShape2D" parent="Player"]
+shape = SubResource("CircleShape2D_dsk5j")
+debug_color = Color(1, 0.00882213, 0.0879236, 0.419608)
+
+[node name="PlayerArea" type="Area2D" parent="Player"]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/PlayerArea"]
+shape = SubResource("CircleShape2D_ctxe3")
+debug_color = Color(0.221762, 0.638803, 0, 0.42)
+
+[node name="Enemy" type="CharacterBody2D" parent="."]
+position = Vector2(564, 123)
+collision_layer = 4
+script = ExtResource("1_j0ds8")
+
+[node name="EnemyArea" type="Area2D" parent="Enemy"]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy/EnemyArea"]
+shape = SubResource("CircleShape2D_ctxe3")
+
+[node name="Wall" type="StaticBody2D" parent="."]
+position = Vector2(448, 195)
+collision_mask = 30
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall"]
+shape = SubResource("RectangleShape2D_8n6h2")
+
+[node name="Projectile" type="RigidBody2D" parent="."]
+position = Vector2(357, 227)
+collision_layer = 8
+collision_mask = 0
+gravity_scale = 0.0
+script = ExtResource("2_0dmqu")
+
+[node name="InteractionArea" type="Area2D" parent="Projectile"]
+collision_layer = 8
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Projectile/InteractionArea"]
+shape = SubResource("CircleShape2D_qejlk")
+debug_color = Color(0.71773, 0.475274, 0.212353, 0.42)
+
+[connection signal="body_entered" from="Player/PlayerArea" to="Player" method="_on_player_area_body_entered"]
+[connection signal="body_entered" from="Enemy/EnemyArea" to="Enemy" method="_on_enemy_area_body_entered"]
+[connection signal="area_entered" from="Projectile/InteractionArea" to="Projectile" method="_on_interaction_area_area_entered"]
