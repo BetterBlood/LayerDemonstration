@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3u36vwxs31hq"]
+
+[ext_resource type="Script" path="res://scripts/StatusEffects/burn_effect.gd" id="1_t8i0p"]
+
+[node name="BurnEffect" type="Node"]
+script = ExtResource("1_t8i0p")
+
+[node name="Cooldown" type="Timer" parent="."]
+
+[node name="TotalDuration" type="Timer" parent="."]
+
+[connection signal="timeout" from="Cooldown" to="." method="_on_cooldown_timeout"]
+[connection signal="timeout" from="TotalDuration" to="." method="_on_total_duration_timeout"]

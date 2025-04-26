@@ -1,7 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://b20h7v4ysl20x"]
+[gd_scene load_steps=11 format=3 uid="uid://b20h7v4ysl20x"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_j0ds8"]
-[ext_resource type="Script" path="res://scripts/projectile.gd" id="2_0dmqu"]
+[ext_resource type="Script" path="res://scripts/fire_projectile.gd" id="2_0dmqu"]
+[ext_resource type="Script" path="res://scripts/health_component.gd" id="2_72jhj"]
+[ext_resource type="Script" path="res://scripts/torch.gd" id="4_ymhet"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dsk5j"]
 radius = 50.0
@@ -10,8 +12,15 @@ radius = 50.0
 radius = 60.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8n6h2"]
+size = Vector2(50, 20)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qejlk"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_iyk6n"]
+radius = 35.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lqe1k"]
+size = Vector2(10, 40)
 
 [node name="Main" type="Node2D"]
 
@@ -19,6 +28,9 @@ radius = 60.0
 position = Vector2(317, 102)
 collision_layer = 2
 script = ExtResource("1_j0ds8")
+
+[node name="HealthComponent" type="Node2D" parent="Player"]
+script = ExtResource("2_72jhj")
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 
@@ -34,9 +46,12 @@ shape = SubResource("CircleShape2D_ctxe3")
 debug_color = Color(0.221762, 0.638803, 0, 0.42)
 
 [node name="Enemy" type="CharacterBody2D" parent="."]
-position = Vector2(564, 123)
+position = Vector2(534, 134)
 collision_layer = 4
 script = ExtResource("1_j0ds8")
+
+[node name="HealthComponent" type="Node2D" parent="Enemy"]
+script = ExtResource("2_72jhj")
 
 [node name="EnemyArea" type="Area2D" parent="Enemy"]
 collision_layer = 4
@@ -45,27 +60,144 @@ collision_layer = 4
 shape = SubResource("CircleShape2D_ctxe3")
 
 [node name="Wall" type="StaticBody2D" parent="."]
-position = Vector2(448, 195)
+position = Vector2(498, 216)
 collision_mask = 30
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Wall"]
 shape = SubResource("RectangleShape2D_8n6h2")
 
-[node name="Projectile" type="RigidBody2D" parent="."]
-position = Vector2(357, 227)
+[node name="FireProjectile_hitWall" type="RigidBody2D" parent="."]
+position = Vector2(460, 214)
 collision_layer = 8
 collision_mask = 0
 gravity_scale = 0.0
 script = ExtResource("2_0dmqu")
 
-[node name="InteractionArea" type="Area2D" parent="Projectile"]
-collision_layer = 8
-collision_mask = 7
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Projectile/InteractionArea"]
+[node name="Shape" type="CollisionShape2D" parent="FireProjectile_hitWall"]
 shape = SubResource("CircleShape2D_qejlk")
 debug_color = Color(0.71773, 0.475274, 0.212353, 0.42)
 
+[node name="InteractionArea" type="Area2D" parent="FireProjectile_hitWall"]
+collision_layer = 8
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FireProjectile_hitWall/InteractionArea"]
+shape = SubResource("CircleShape2D_qejlk")
+debug_color = Color(0.71773, 0.475274, 0.212353, 0.42)
+
+[node name="TimeToLive" type="Timer" parent="FireProjectile_hitWall"]
+
+[node name="FireProjectile_time" type="RigidBody2D" parent="."]
+position = Vector2(460, 310)
+collision_layer = 8
+collision_mask = 0
+gravity_scale = 0.0
+script = ExtResource("2_0dmqu")
+
+[node name="Shape" type="CollisionShape2D" parent="FireProjectile_time"]
+shape = SubResource("CircleShape2D_qejlk")
+debug_color = Color(0.71773, 0.475274, 0.212353, 0.42)
+
+[node name="InteractionArea" type="Area2D" parent="FireProjectile_time"]
+collision_layer = 8
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FireProjectile_time/InteractionArea"]
+shape = SubResource("CircleShape2D_qejlk")
+debug_color = Color(0.71773, 0.475274, 0.212353, 0.42)
+
+[node name="TimeToLive" type="Timer" parent="FireProjectile_time"]
+
+[node name="FireProjectile_notStatusEffect_then_torch" type="RigidBody2D" parent="."]
+position = Vector2(463, 262)
+collision_layer = 8
+collision_mask = 0
+gravity_scale = 0.0
+script = ExtResource("2_0dmqu")
+
+[node name="Shape" type="CollisionShape2D" parent="FireProjectile_notStatusEffect_then_torch"]
+shape = SubResource("CircleShape2D_qejlk")
+debug_color = Color(0.71773, 0.475274, 0.212353, 0.42)
+
+[node name="InteractionArea" type="Area2D" parent="FireProjectile_notStatusEffect_then_torch"]
+collision_layer = 8
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FireProjectile_notStatusEffect_then_torch/InteractionArea"]
+shape = SubResource("CircleShape2D_qejlk")
+debug_color = Color(0.71773, 0.475274, 0.212353, 0.42)
+
+[node name="TimeToLive" type="Timer" parent="FireProjectile_notStatusEffect_then_torch"]
+
+[node name="FireProjectile_enemy" type="RigidBody2D" parent="."]
+position = Vector2(457, 136)
+collision_layer = 8
+collision_mask = 0
+gravity_scale = 0.0
+script = ExtResource("2_0dmqu")
+
+[node name="Shape" type="CollisionShape2D" parent="FireProjectile_enemy"]
+shape = SubResource("CircleShape2D_qejlk")
+debug_color = Color(0.71773, 0.475274, 0.212353, 0.42)
+
+[node name="InteractionArea" type="Area2D" parent="FireProjectile_enemy"]
+collision_layer = 8
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FireProjectile_enemy/InteractionArea"]
+shape = SubResource("CircleShape2D_qejlk")
+debug_color = Color(0.71773, 0.475274, 0.212353, 0.42)
+
+[node name="TimeToLive" type="Timer" parent="FireProjectile_enemy"]
+
+[node name="NotAStatusEffectHandler" type="CharacterBody2D" parent="."]
+position = Vector2(587, 257)
+collision_layer = 0
+collision_mask = 0
+
+[node name="Area2D" type="Area2D" parent="NotAStatusEffectHandler"]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NotAStatusEffectHandler/Area2D"]
+shape = SubResource("CircleShape2D_iyk6n")
+debug_color = Color(0.633534, 0.343239, 1, 0.42)
+
+[node name="Torch" type="StaticBody2D" parent="."]
+position = Vector2(641, 257)
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("4_ymhet")
+
+[node name="Area2D" type="Area2D" parent="Torch"]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Torch/Area2D"]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_lqe1k")
+debug_color = Color(0.741589, 0.457708, 0.237623, 0.42)
+
 [connection signal="body_entered" from="Player/PlayerArea" to="Player" method="_on_player_area_body_entered"]
 [connection signal="body_entered" from="Enemy/EnemyArea" to="Enemy" method="_on_enemy_area_body_entered"]
-[connection signal="area_entered" from="Projectile/InteractionArea" to="Projectile" method="_on_interaction_area_area_entered"]
+[connection signal="body_shape_entered" from="FireProjectile_hitWall" to="FireProjectile_hitWall" method="_on_body_shape_entered"]
+[connection signal="area_entered" from="FireProjectile_hitWall/InteractionArea" to="FireProjectile_hitWall" method="_on_interaction_area_area_entered"]
+[connection signal="area_shape_entered" from="FireProjectile_hitWall/InteractionArea" to="FireProjectile_hitWall" method="_on_interaction_area_area_shape_entered"]
+[connection signal="body_entered" from="FireProjectile_hitWall/InteractionArea" to="FireProjectile_hitWall" method="_on_interaction_area_body_entered"]
+[connection signal="timeout" from="FireProjectile_hitWall/TimeToLive" to="FireProjectile_hitWall" method="_on_time_to_live_timeout"]
+[connection signal="body_shape_entered" from="FireProjectile_time" to="FireProjectile_time" method="_on_body_shape_entered"]
+[connection signal="area_entered" from="FireProjectile_time/InteractionArea" to="FireProjectile_time" method="_on_interaction_area_area_entered"]
+[connection signal="area_shape_entered" from="FireProjectile_time/InteractionArea" to="FireProjectile_time" method="_on_interaction_area_area_shape_entered"]
+[connection signal="body_entered" from="FireProjectile_time/InteractionArea" to="FireProjectile_time" method="_on_interaction_area_body_entered"]
+[connection signal="timeout" from="FireProjectile_time/TimeToLive" to="FireProjectile_time" method="_on_time_to_live_timeout"]
+[connection signal="body_shape_entered" from="FireProjectile_notStatusEffect_then_torch" to="FireProjectile_notStatusEffect_then_torch" method="_on_body_shape_entered"]
+[connection signal="area_entered" from="FireProjectile_notStatusEffect_then_torch/InteractionArea" to="FireProjectile_notStatusEffect_then_torch" method="_on_interaction_area_area_entered"]
+[connection signal="area_shape_entered" from="FireProjectile_notStatusEffect_then_torch/InteractionArea" to="FireProjectile_notStatusEffect_then_torch" method="_on_interaction_area_area_shape_entered"]
+[connection signal="body_entered" from="FireProjectile_notStatusEffect_then_torch/InteractionArea" to="FireProjectile_notStatusEffect_then_torch" method="_on_interaction_area_body_entered"]
+[connection signal="timeout" from="FireProjectile_notStatusEffect_then_torch/TimeToLive" to="FireProjectile_notStatusEffect_then_torch" method="_on_time_to_live_timeout"]
+[connection signal="body_shape_entered" from="FireProjectile_enemy" to="FireProjectile_enemy" method="_on_body_shape_entered"]
+[connection signal="area_entered" from="FireProjectile_enemy/InteractionArea" to="FireProjectile_enemy" method="_on_interaction_area_area_entered"]
+[connection signal="area_shape_entered" from="FireProjectile_enemy/InteractionArea" to="FireProjectile_enemy" method="_on_interaction_area_area_shape_entered"]
+[connection signal="body_entered" from="FireProjectile_enemy/InteractionArea" to="FireProjectile_enemy" method="_on_interaction_area_body_entered"]
+[connection signal="timeout" from="FireProjectile_enemy/TimeToLive" to="FireProjectile_enemy" method="_on_time_to_live_timeout"]
+[connection signal="area_entered" from="Torch/Area2D" to="Torch" method="_on_area_2d_area_entered"]

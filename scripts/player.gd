@@ -1,9 +1,11 @@
 extends CharacterBody2D
 
+class_name Creature
 
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 
+@onready var health_component: HealthComponent = $HealthComponent
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -38,3 +40,14 @@ func _on_player_area_body_entered(body: Node2D) -> void:
 
 func _on_enemy_area_body_entered(body: Node2D) -> void:
 	print("enemy collide with: ", body)
+
+func get_health_component() -> HealthComponent:
+	return health_component
+
+#func take_fire_effect() -> void:
+	#health_component.take_fire_effect()
+	#print(self, ": I'm literally on fire....")
+	#pass
+
+func can_host_status_effect() -> bool:
+	return true
