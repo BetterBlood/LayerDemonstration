@@ -5,7 +5,16 @@ class_name Creature
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 
-@onready var health_component: HealthComponent = $HealthComponent
+@onready var health_component: HealthComponent = $HealthComponent # DEBUG
+const HealthComponent = preload("res://scripts/health_component.gd")
+
+func _ready() -> void:
+	
+	# for enemies the @onready wont works cause I didn't put manually the health
+	# component, so an error is raised, following lines patch errors linked to
+	if health_component == null:
+		health_component = HealthComponent.new()
+		add_child(health_component)
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.

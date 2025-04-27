@@ -50,9 +50,6 @@ position = Vector2(534, 134)
 collision_layer = 4
 script = ExtResource("1_j0ds8")
 
-[node name="HealthComponent" type="Node2D" parent="Enemy"]
-script = ExtResource("2_72jhj")
-
 [node name="EnemyArea" type="Area2D" parent="Enemy"]
 collision_layer = 4
 
